@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{285BAFFD-1698-4ECB-8403-9EEAC5979047}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OS_Chronopost2</RootNamespace>
+    <AssemblyName>OS_Chronopost2</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetNuke">
+      <HintPath>..\NBrightBuy\_external\DotNetNuke.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.Instrumentation">
+      <HintPath>..\NBrightBuy\_external\DotNetNuke.Instrumentation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationBlocks.Data">
+      <HintPath>..\NBrightBuy\_external\Microsoft.ApplicationBlocks.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="NBrightCore">
+      <HintPath>..\NBrightBuy\_external\NBrightCore.dll</HintPath>
+    </Reference>
+    <Reference Include="NBrightDNN">
+      <HintPath>..\NBrightBuy\_external\NBrightDNN.dll</HintPath>
+    </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\NBrightBuy\_external\RazorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Chronopost.ascx.cs">
+      <DependentUpon>Chronopost.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Chronopost.ascx.designer.cs">
+      <DependentUpon>Chronopost.ascx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\AjaxProvider.cs" />
+    <Compile Include="Components\ChronopostLimpet.cs" />
+    <Compile Include="Components\Provider.cs" />
+    <Compile Include="Components\SettingsLimpet.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Chronopost.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="Installation\pluginChronopost2.xml" />
+    <Content Include="soaplabel.xml" />
+    <Content Include="soappointlist.xml" />
+    <Content Include="soapquickcost.xml" />
+    <Content Include="Themes\config\css\module.css" />
+    <Content Include="Themes\config\img\chrono24.png" />
+    <Content Include="Themes\config\img\chronorelais.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DNNpackager.dnnpack" />
+    <None Include="LICENSE" />
+    <None Include="OS_Chronopost2.dnn" />
+    <None Include="README.md" />
+    <None Include="Themes\config\default\carttemplate.cshtml" />
+    <None Include="Themes\config\default\settings.cshtml" />
+    <None Include="Themes\config\default\settingsfields.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NBrightBuy\NBrightBuy.csproj">
+      <Project>{8f850303-bec5-4247-9126-1e58f1402205}</Project>
+      <Name>NBrightBuy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App_LocalResources\Chronopost.ascx.fr-FR.resx" />
+    <EmbeddedResource Include="App_LocalResources\Chronopost.ascx.resx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+
+DNNpackager.exe  $(ProjectDir) $(ProjectDir)$(OutDir) $(ConfigurationName)
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>

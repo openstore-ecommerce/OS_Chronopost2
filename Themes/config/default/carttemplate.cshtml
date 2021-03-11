@@ -1,0 +1,79 @@
+@inherits NBrightBuy.render.NBrightBuyRazorTokens<NBrightDNN.NBrightRazor>
+@using System.Linq
+@using DotNetNuke.Common
+@using DotNetNuke.Entities.Portals
+@using DotNetNuke.Entities.Users
+@using NBrightDNN
+@using Nevoweb.DNN.NBrightBuy.Components
+@using Nevoweb.OS_Chronopost2;
+@using Nevoweb.OS_Chronopost2.Components;
+
+@AddMetaData("resourcepath", "/DesktopModules/NBright/OS_Chronopost2/App_LocalResources")
+@AddMetaData("resourcepath", "/DesktopModules/NBright/NBrightBuy/App_LocalResources/")
+
+@{
+    var chronopostData = (ChronopostLimpet)Model.List.First();
+}
+
+<link href="/DesktopModules/NBright/OS_Chronopost2/Themes/config/css/module.css" rel="stylesheet">
+<link href="/DesktopModules/NBright/NBrightBuy/Themes/config/css/w3.css" rel="stylesheet">
+
+<div id="chronoposttemplate">
+    <div class="formrow dnnForm chronopostdata">
+
+        <h1>@chronopostData.ParamCmd</h1>
+
+        @if (String.IsNullOrEmpty(chronopostData.ParamCmd))
+        {
+            <span id="chronopostproductselect">
+            </span>
+        }
+
+        @if (chronopostData.ParamCmd == "chronopost_relais")
+        {
+            var l = chronopostData.GetRelais();
+            foreach (var r in l)
+            {
+                <div class="action_relais w3-row w3-border w3-padding">
+                    <a href="@r.GetXmlProperty("return/urlgooglemaps")" target="_blank" class=""><i class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;</a>
+                    <span id="identifiantchronopostpointa2pas" style="cursor:pointer;">
+                        <b>@r.GetXmlProperty("return/nomenseigne")</b>
+                        @r.GetXmlProperty("return/adresse1")&nbsp;@r.GetXmlProperty("return/localite")
+                    </span>
+                </div>
+            }
+        }
+
+    </div>
+    <div class="formrow">
+    </div>
+    <div class="formrow">
+    </div>
+</div>
+
+<div class=".chronopostreturnmsg"></div>
+
+
+<script>
+    $(document).ready(function () {
+
+        $('.chronopost_save').unbind("click");
+        $('.chronopost_save').click(function () {
+            $('.processing').show();
+            $('.actionbuttonwrapper').hide();
+            nbxget('chronopost_select', '.chronopostdata', '.chronopostproductselect');
+        });
+
+        $(document).on("nbxgetcompleted", ManualPayment_nbxgetCompleted); // assign a completed event for the ajax calls
+
+        // function to do actions after an ajax call has been made.
+        function ManualPayment_nbxgetCompleted(e) {
+            $('.processing').hide();
+            $('.actionbuttonwrapper').show();
+            $('.editlanguage').show();
+        };
+
+
+    });
+
+</script>
