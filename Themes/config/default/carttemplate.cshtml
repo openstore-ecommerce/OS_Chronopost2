@@ -21,26 +21,45 @@
 <div id="chronoposttemplate">
     <div class="formrow dnnForm chronopostdata">
 
-        <h1>@chronopostData.ParamCmd</h1>
+        <span id="chronopostproductselect">
+            @{
+                var productCodes = chronopostData.ProductCodeList();
+                foreach (var pc in productCodes)
+                {
+                    var scheckvalue = "";
+                    if (chronopostData.SelectedProductCode == pc.Key)
+                    {
+                        scheckvalue = "checked"; 
+                    }
+                    <input type="radio" id="productcode_@(pc.Key)" onclick="updateselectedproduct();" name="productcode" update="save" value="@(pc.Key)" @scheckvalue >
+                    <label for="productcode_@(pc.Key)">@(pc.Value)</label>
+                }
+            }
+        </span>
 
-        @if (String.IsNullOrEmpty(chronopostData.ParamCmd))
+        @if (chronopostData.SelectedProductCode == "86")
         {
-            <span id="chronopostproductselect">
-            </span>
-        }
-
-        @if (chronopostData.ParamCmd == "chronopost_relais")
-        {
+            <h2>@ResourceKey("Chronopost.chronopost86")</h2>
+            <p>
+                @ResourceKey("Chronopost.selectrelais")
+            </p>
             var l = chronopostData.GetRelais();
-            foreach (var r in l)
+            if (l.Count > 0)
             {
-                <div class="action_relais w3-row w3-border w3-padding">
-                    <a href="@r.GetXmlProperty("return/urlgooglemaps")" target="_blank" class=""><i class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;</a>
-                    <span id="identifiantchronopostpointa2pas" style="cursor:pointer;">
-                        <b>@r.GetXmlProperty("return/nomenseigne")</b>
-                        @r.GetXmlProperty("return/adresse1")&nbsp;@r.GetXmlProperty("return/localite")
-                    </span>
-                </div>
+                foreach (var r in l)
+                {
+                    <div class="action_relais w3-row w3-border w3-padding">
+                        <a href="@r.GetXmlProperty("return/urlgooglemaps")" target="_blank" class=""><i class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;</a>
+                        <span id="identifiantchronopostpointa2pas" style="cursor:pointer;">
+                            <b>@r.GetXmlProperty("return/nomenseigne")</b>
+                            @r.GetXmlProperty("return/adresse1")&nbsp;@r.GetXmlProperty("return/localite")
+                        </span>
+                    </div>
+                }
+            }
+            else
+            {
+                <div>@ResourceKey("Chronopost.relaisfail")</div>
             }
         }
 
@@ -57,13 +76,6 @@
 <script>
     $(document).ready(function () {
 
-        $('.chronopost_save').unbind("click");
-        $('.chronopost_save').click(function () {
-            $('.processing').show();
-            $('.actionbuttonwrapper').hide();
-            nbxget('chronopost_select', '.chronopostdata', '.chronopostproductselect');
-        });
-
         $(document).on("nbxgetcompleted", ManualPayment_nbxgetCompleted); // assign a completed event for the ajax calls
 
         // function to do actions after an ajax call has been made.
@@ -72,8 +84,12 @@
             $('.actionbuttonwrapper').show();
             $('.editlanguage').show();
         };
-
-
+                
     });
+
+    function updateselectedproduct() {
+        $('.processing').show();
+        nbxget('chronopost2_select', '#chronopostproductselect', '#shipprovidertemplates');
+    }
 
 </script>

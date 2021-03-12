@@ -209,4 +209,7 @@ $('input[id*="_cmdOrder_"]').hide();
   <data name="chronopostaudit.Text" xml:space="preserve">
     <value>Audit</value>
   </data>
+  <data name="selectrelais.Text" xml:space="preserve">
+    <value>Please select your pickup point</value>
+  </data>
 </root>

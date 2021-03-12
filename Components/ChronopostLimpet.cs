@@ -19,7 +19,7 @@ namespace Nevoweb.OS_Chronopost2.Components
         public ChronopostLimpet(NBrightInfo cartInfo)
         {
             Cart = new CartData(cartInfo.PortalId, "", cartInfo.ItemID.ToString());
-            SettingsData = new SettingsLimpet(Cart);           
+            SettingsData = new SettingsLimpet(Cart);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Nevoweb.OS_Chronopost2.Components
                 soapxml = soapxml.Replace("{depcode}", Utils.StripAccents(SettingsData.DistributionPostCode));
                 soapxml = soapxml.Replace("{arrcode}", SettingsData.ArrivalPostCode);
                 soapxml = soapxml.Replace("{weight}", SettingsData.TotalWeight.ToString(CultureInfo.GetCultureInfo("en-US")));
-                soapxml = soapxml.Replace("{productcode}", SettingsData.ProductCode);
+                soapxml = soapxml.Replace("{productcode}", SelectedProductCode);
                 soapxml = soapxml.Replace("{type}", SettingsData.ProductType);
 
                 var nbi = GetSoapReturn(soapxml, "https://www.chronopost.fr/quickcost-cxf/QuickcostServiceWS");
@@ -76,6 +76,10 @@ namespace Nevoweb.OS_Chronopost2.Components
                 Cart.PurchaseInfo.SetXmlPropertyDouble("genxml/shippingcostTVA", shippingcostTVA);
                 Cart.PurchaseInfo.SetXmlPropertyDouble("genxml/shippingdealercost", shippingdealercost);
                 Cart.PurchaseInfo.SetXmlProperty("genxml/chronopostmessage", shippingmsg);
+
+                /// TEST
+                Cart.PurchaseInfo.SetXmlPropertyDouble("genxml/shippingcost", 999);
+                Cart.PurchaseInfo.SetXmlPropertyDouble("genxml/shippingdealercost", 999);
             }
         }
 
@@ -87,7 +91,7 @@ namespace Nevoweb.OS_Chronopost2.Components
             xmlDoc.Load(soapxmlfilename);
             var soapxml = xmlDoc.OuterXml;
             // replace the tokens in the soap XML strucutre.
-            soapxml = soapxml.Replace("{codeProduit}", SettingsData.ProductCode);
+            soapxml = soapxml.Replace("{codeProduit}", SelectedProductCode);
             soapxml = soapxml.Replace("{codePostal}", Utils.StripAccents(SettingsData.ArrivalPostCode));
             var pickupdate = DateTime.Now.AddDays(SettingsData.LeadDays);
             if (pickupdate.DayOfWeek == DayOfWeek.Saturday || pickupdate.DayOfWeek == DayOfWeek.Sunday) pickupdate = pickupdate.AddDays(2);
@@ -139,7 +143,7 @@ namespace Nevoweb.OS_Chronopost2.Components
             soapxml = soapxml.Replace("{password}", SettingsData.Password);
             soapxml = soapxml.Replace("{weight}", SettingsData.TotalWeight.ToString("F"));
 
-            soapxml = soapxml.Replace("{productcode}", SettingsData.ProductCode);
+            soapxml = soapxml.Replace("{productcode}", SelectedProductCode);
 
             soapxml = soapxml.Replace("{shipperCountry}", Utils.StripAccents(SettingsData.DistributionCountryCode));
             //soapxml = soapxml.Replace("{shipperCountryName}", Utils.StripAccents(SettingsData.DistributionCountryName));
@@ -159,7 +163,7 @@ namespace Nevoweb.OS_Chronopost2.Components
                 soapxml = soapxml.Replace("{" + s.Key + "}", s.Value);
             }
 
-            if (SettingsData.ProductCode == "86")
+            if (SelectedProductCode == "86")
             {
                 // Is a relais, so force delivery address to the pickup point.
                 var pickuppoint = Cart.PurchaseInfo.GetXmlProperty("genxml/extrainfo/genxml/hidden/pickuppointaddr");
@@ -251,7 +255,7 @@ namespace Nevoweb.OS_Chronopost2.Components
             else
                 soapxml = soapxml.Replace("{objecttype}", "MAR");
 
-            if (SettingsData.ProductCode == "86")
+            if (SelectedProductCode == "86")
                 soapxml = soapxml.Replace("{recipientref}", Utils.StripAccents(Cart.PurchaseInfo.GetXmlProperty("genxml/extrainfo/genxml/radiobuttonlist/chronopostrelais")));
             else
                 soapxml = soapxml.Replace("{recipientref}", Utils.StripAccents(Cart.PurchaseInfo.GetXmlProperty("genxml/textbox/trackingcode")));
@@ -324,7 +328,13 @@ namespace Nevoweb.OS_Chronopost2.Components
                 return nbi;
             }
         }
+        public Dictionary<string, string> ProductCodeList()
+        {
+            return SettingsData.ProductCodeList();
+        }
+
         public string ParamCmd { set { Cart.PurchaseInfo.SetXmlProperty("genxml/chronopostparamcmd", value.ToString()); } get { return Cart.PurchaseInfo.GetXmlProperty("genxml/chronopostparamcmd"); } }
+        public string SelectedProductCode { set { Cart.PurchaseInfo.SetXmlProperty("genxml/chronopostproductcode", value.ToString()); } get { return Cart.PurchaseInfo.GetXmlProperty("genxml/chronopostproductcode"); } }
         public string ShippingKey { get { return "chronopost2"; } }
         public CartData Cart { set; get; }
         public SettingsLimpet SettingsData { set; get; }        

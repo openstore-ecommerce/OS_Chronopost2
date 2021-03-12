@@ -42,6 +42,16 @@ namespace Nevoweb.OS_Chronopost2
                         break;
                 }
             }
+            switch (paramCmd)
+            {
+                case "chronopost2_select":
+                    var currentcart = new CartData(PortalSettings.Current.PortalId);
+                    var chronoData = new ChronopostLimpet(currentcart.PurchaseInfo);
+                    chronoData.SelectedProductCode = ajaxInfo.GetXmlProperty("genxml/radiobuttonlist/productcode");
+                    chronoData.Cart.Save();
+                    strOut = NBrightBuyUtils.RazorTemplRender("carttemplate.cshtml", 0, "", chronoData, "/DesktopModules/NBright/OS_Chronopost2", "config", Utils.GetCurrentCulture(), StoreSettings.Current.Settings());
+                    break;
+            }
 
             return strOut;
 

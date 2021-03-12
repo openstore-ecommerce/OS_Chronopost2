@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml;
 
 namespace OS_Chronopost2.Components
 {
@@ -31,6 +32,20 @@ namespace OS_Chronopost2.Components
 
         }
 
+        public Dictionary<string, string> ProductCodeList()
+        {
+            var rtn = new Dictionary<string, string>();
+            var nodList = Info.XMLDoc.SelectNodes("genxml/checkboxlist/chronopostproductcode/chk[@value='True']");
+            if (nodList != null)
+            {
+                foreach (XmlNode nod in nodList)
+                {
+                    rtn.Add(nod.Attributes["data"].InnerText, nod.InnerText);
+                }
+            }
+            return rtn;
+        }
+
         public void Save(HttpContext context)
         {
             _objCtrl.SavePluginSinglePageData(context);
@@ -45,7 +60,6 @@ namespace OS_Chronopost2.Components
         public string DistributionPostCode { get { return Info.GetXmlProperty("genxml/textbox/distributionpostcode"); } }
         public int LeadDays { get { return Info.GetXmlPropertyInt("genxml/textbox/chronopostleaddays"); } }
         public string PrintMode { get { return Info.GetXmlProperty("genxml/dropdownlist/printmode"); } }
-        public string ProductCode { get { return Info.GetXmlProperty("genxml/textbox/chronopostproductcode"); } }
         public string ProductType { get { return Info.GetXmlProperty("genxml/dropdownlist/chronoposttype"); } }        
 
         // CART

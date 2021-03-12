@@ -46,7 +46,8 @@
     <Reference Include="NBrightDNN">
       <HintPath>..\NBrightBuy\_external\NBrightDNN.dll</HintPath>
     </Reference>
-    <Reference Include="RazorEngine">
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NBrightBuy\_external\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
