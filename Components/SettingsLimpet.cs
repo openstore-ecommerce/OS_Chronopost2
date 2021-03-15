@@ -14,17 +14,17 @@ namespace OS_Chronopost2.Components
     public class SettingsLimpet
     {
         private NBrightBuyController _objCtrl;
-        public SettingsLimpet(CartData cart)
+        public SettingsLimpet(NBrightInfo cartInfo)
         {
             // cart data 
-            TotalWeight = cart.PurchaseInfo.GetXmlPropertyDouble("genxml/totalweight");
-            SubTotal = cart.PurchaseInfo.GetXmlPropertyDouble("genxml/subtotal");
-            ArrivalPostCode = Utils.StripAccents(cart.PurchaseInfo.GetXmlProperty("genxml/shipaddress/genxml/textbox/postalcode"));
-            if (ArrivalPostCode == "") ArrivalPostCode = Utils.StripAccents(cart.PurchaseInfo.GetXmlProperty("genxml/billaddress/genxml/textbox/postalcode"));
-            ArrivalCountryCode = Utils.StripAccents(cart.PurchaseInfo.GetXmlProperty("genxml/shipaddress/genxml/dropdownlist/country"));
-            if (ArrivalCountryCode == "") ArrivalCountryCode = Utils.StripAccents(cart.PurchaseInfo.GetXmlProperty("genxml/billaddress/genxml/dropdownlist/country"));
-            ShippingProvider = cart.PurchaseInfo.GetXmlProperty("genxml/extrainfo/genxml/radiobuttonlist/shippingprovider");
-            ShippingOption = cart.PurchaseInfo.GetXmlProperty("genxml/extrainfo/genxml/radiobuttonlist/rblshippingoptions");
+            TotalWeight = cartInfo.GetXmlPropertyDouble("genxml/totalweight");
+            SubTotal = cartInfo.GetXmlPropertyDouble("genxml/subtotal");
+            ArrivalPostCode = Utils.StripAccents(cartInfo.GetXmlProperty("genxml/shipaddress/genxml/textbox/postalcode"));
+            if (ArrivalPostCode == "") ArrivalPostCode = Utils.StripAccents(cartInfo.GetXmlProperty("genxml/billaddress/genxml/textbox/postalcode"));
+            ArrivalCountryCode = Utils.StripAccents(cartInfo.GetXmlProperty("genxml/shipaddress/genxml/dropdownlist/country"));
+            if (ArrivalCountryCode == "") ArrivalCountryCode = Utils.StripAccents(cartInfo.GetXmlProperty("genxml/billaddress/genxml/dropdownlist/country"));
+            ShippingProvider = cartInfo.GetXmlProperty("genxml/extrainfo/genxml/radiobuttonlist/shippingprovider");
+            ShippingOption = cartInfo.GetXmlProperty("genxml/extrainfo/genxml/radiobuttonlist/rblshippingoptions");
 
             // Load Settings
             _objCtrl = new NBrightBuyController();

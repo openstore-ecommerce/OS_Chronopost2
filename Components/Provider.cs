@@ -28,7 +28,7 @@ namespace Nevoweb.OS_Chronopost2
         {
             var chronoData = new ChronopostLimpet(cartInfo);
             chronoData.UpdateShippingCost();
-            return chronoData.Cart.PurchaseInfo;
+            return chronoData.CartInfo;
         }
 
         public override string Shippingkey { get; set; }
