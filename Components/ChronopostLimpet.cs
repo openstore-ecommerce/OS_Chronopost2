@@ -19,6 +19,7 @@ namespace Nevoweb.OS_Chronopost2.Components
         public ChronopostLimpet(NBrightInfo cartInfo)
         {
             CartInfo = cartInfo;
+            ChronofreshOnly = CheckCartForProperty("chronofresh");
             //DO NOT LOAD THE CART AGAIN, the weight of the cart is calculated but not saved to the DB. Use the cartInfo to get data.
             SettingsData = new SettingsLimpet(CartInfo);
         }
@@ -30,7 +31,23 @@ namespace Nevoweb.OS_Chronopost2.Components
         {
             ParamCmd = "chronopost_relais";
 
-            if ((SettingsData.FreeShippingLimit > 0 && (SettingsData.FreeShippingLimit <= SettingsData.SubTotal) || SettingsData.TotalWeight == 0))
+            if (ChronofreshOnly)
+            {
+                SelectedProductCode = "2R";
+            }
+            else
+            {
+                if (SelectedProductCode == "")
+                {
+                    if (ProductCodeList().Count > 0)
+                    {
+                        SelectedProductCode = ProductCodeList().First().Key;
+                    }
+                }
+            }
+
+
+            if ((SettingsData.FreeShippingLimit > 0 && (SettingsData.FreeShippingLimit <= SettingsData.SubTotal)))
             {
                 // return zero if we have invalid data
                 CartInfo.SetXmlPropertyDouble("genxml/shippingcost", "0");
@@ -53,6 +70,13 @@ namespace Nevoweb.OS_Chronopost2.Components
                 soapxml = soapxml.Replace("{weight}", SettingsData.TotalWeight.ToString(CultureInfo.GetCultureInfo("en-US")));
                 soapxml = soapxml.Replace("{productcode}", SelectedProductCode);
                 soapxml = soapxml.Replace("{type}", SettingsData.ProductType);
+
+                if (StoreSettings.Current.DebugMode)
+                {
+                    var nbi2 = new NBrightInfo();
+                    nbi2.XMLData = soapxml;
+                    nbi2.XMLDoc.Save(PortalSettings.Current.HomeDirectoryMapPath + "\\debug_chronopostsoap_" + SelectedProductCode + ".xml");
+                }
 
                 var nbi = GetSoapReturn(soapxml, "https://www.chronopost.fr/quickcost-cxf/QuickcostServiceWS");
 
@@ -88,7 +112,17 @@ namespace Nevoweb.OS_Chronopost2.Components
                 //CartInfo.SetXmlPropertyDouble("genxml/shippingdealercost", 999);
             }
         }
-
+        public void UpdateRelais(string encodedRealis)
+        {
+            var relaisData = NBrightBuyUtils.DeCode(encodedRealis);
+            if (relaisData != "")
+            {
+                CartInfo.RemoveXmlNode("genxml/return");
+                CartInfo.AddXmlNode(relaisData, "return", "genxml");
+                CartInfo.SetXmlProperty("genxml/pickuppointref", CartInfo.GetXmlProperty("genxml/return/identifiantchronopostpointa2pas"));
+                CartInfo.SetXmlProperty("genxml/pickuppointaddr", CartInfo.GetXmlProperty("genxml/return/nomenseigne") + ", " + CartInfo.GetXmlProperty("genxml/return/adresse1") + ", " + CartInfo.GetXmlProperty("genxml/return/localite"));
+            }
+        }
         public List<NBrightInfo> GetRelais()
         {
             // get soap xml from resx
@@ -276,6 +310,13 @@ namespace Nevoweb.OS_Chronopost2.Components
                 lp += 1;
             }
 
+            if (StoreSettings.Current.DebugMode)
+            {
+                var nbi2 = new NBrightInfo();
+                nbi2.XMLData = soapxml;
+                nbi2.XMLDoc.Save(PortalSettings.Current.HomeDirectoryMapPath + "\\debug_chronopostlabelsoap_" + SelectedProductCode + ".xml");
+            }
+
             var nbi = GetSoapReturn(soapxml, "https://www.chronopost.fr/shipping-cxf/ShippingServiceWS");
 
             XmlDocument doc = new XmlDocument();
@@ -317,13 +358,6 @@ namespace Nevoweb.OS_Chronopost2.Components
 
         private NBrightInfo GetSoapReturn(String soapxml, String url)
         {
-            if (StoreSettings.Current.DebugMode)
-            {
-                var nbi = new NBrightInfo();
-                nbi.XMLData = soapxml;
-                nbi.XMLDoc.Save(PortalSettings.Current.HomeDirectoryMapPath + "\\debug_chronopostsoap.xml");
-            }
-
             using (var client = new WebClient())
             {
                 // the Content-Type needs to be set to XML
@@ -355,6 +389,7 @@ namespace Nevoweb.OS_Chronopost2.Components
         public string ParamCmd { set { CartInfo.SetXmlProperty("genxml/chronopostparamcmd", value.ToString()); } get { return CartInfo.GetXmlProperty("genxml/chronopostparamcmd"); } }
         public string SelectedProductCode { set { CartInfo.SetXmlProperty("genxml/chronopostproductcode", value.ToString()); } get { return CartInfo.GetXmlProperty("genxml/chronopostproductcode"); } }
         public string ShippingKey { get { return "chronopost2"; } }
+        public bool ChronofreshOnly { set; get; }
         public SettingsLimpet SettingsData { set; get; }
         public NBrightInfo CartInfo { set; get; }
         

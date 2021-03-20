@@ -17,6 +17,7 @@ using Nevoweb.DNN.NBrightBuy.Components.Products;
 using Nevoweb.DNN.NBrightBuy.Components.Interfaces;
 using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
 using Nevoweb.OS_Chronopost2.Components;
+using Nevoweb.DNN.NBrightBuy.Components.Cart;
 
 namespace Nevoweb.OS_Chronopost2
 {
@@ -47,11 +48,20 @@ namespace Nevoweb.OS_Chronopost2
                 case "chronopost2_select":
                     var currentcart = new CartData(PortalSettings.Current.PortalId);
                     var chronoData = new ChronopostLimpet(currentcart.PurchaseInfo);
-                    chronoData.SelectedProductCode = ajaxInfo.GetXmlProperty("genxml/radiobuttonlist/productcode");
+                    chronoData.SelectedProductCode = ajaxInfo.GetXmlProperty("genxml/hidden/productcode");
                     chronoData.UpdateShippingCost();
                     chronoData.UpdateCartInfo();
+
                     strOut = NBrightBuyUtils.RazorTemplRender("carttemplate.cshtml", 0, "", chronoData, "/DesktopModules/NBright/OS_Chronopost2", "config", Utils.GetCurrentCulture(), StoreSettings.Current.Settings());
                     break;
+                case "chronopost2_selectrelais":
+                    var currentcart2 = new CartData(PortalSettings.Current.PortalId);
+                    var chronoData2 = new ChronopostLimpet(currentcart2.PurchaseInfo);
+                    chronoData2.UpdateRelais(ajaxInfo.GetXmlProperty("genxml/hidden/relaisdata"));
+                    chronoData2.UpdateCartInfo();
+
+                    strOut = NBrightBuyUtils.RazorTemplRender("carttemplate.cshtml", 0, "", chronoData2, "/DesktopModules/NBright/OS_Chronopost2", "config", Utils.GetCurrentCulture(), StoreSettings.Current.Settings());
+                    break;                    
             }
 
             return strOut;

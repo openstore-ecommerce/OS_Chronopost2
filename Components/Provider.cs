@@ -41,13 +41,14 @@ namespace Nevoweb.OS_Chronopost2
         public override string GetTemplate(NBrightInfo cartInfo)
         {
             var chronoData = new ChronopostLimpet(cartInfo);
+            chronoData.UpdateShippingCost();
             return NBrightBuyUtils.RazorTemplRender("carttemplate.cshtml", 0, "", chronoData, "/DesktopModules/NBright/OS_Chronopost2", "config", Utils.GetCurrentCulture(), StoreSettings.Current.Settings());
         }
 
         public override string GetDeliveryLabelUrl(NBrightInfo cartInfo)
         {
             var chronoData = new ChronopostLimpet(cartInfo);
-            return "LABEL TEST";
+            return chronoData.GetDeliveryLabelUrl();
         }
         public override bool IsValid(NBrightInfo cartInfo)
         {

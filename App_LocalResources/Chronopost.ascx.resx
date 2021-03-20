@@ -157,7 +157,7 @@
     <value>Chronopost 13,Chronopost 24h,Chronopost Relais,Chronopost Express International,Chronopost Classic International,Chronofresh</value>
   </data>
   <data name="productcodelist.datavalue" xml:space="preserve">
-    <value>1,2,86,17,44,2R</value>
+    <value>1S,2,86,17,44,2R</value>
   </data>
   <data name="Description.Text" xml:space="preserve">
     <value>
@@ -211,5 +211,14 @@ $('input[id*="_cmdOrder_"]').hide();
   </data>
   <data name="selectrelais.Text" xml:space="preserve">
     <value>Please select your pickup point</value>
+  </data>
+  <data name="chronofreshonly.Text" xml:space="preserve">
+    <value>You have fresh goods in your basket, we ensure perfect delivery by using Chronofresh</value>
+  </data>
+  <data name="chronopost.Text" xml:space="preserve">
+    <value>Chronopost</value>
+  </data>
+  <data name="chronopostfresh.Text" xml:space="preserve">
+    <value>Chronofresh</value>
   </data>
 </root>
