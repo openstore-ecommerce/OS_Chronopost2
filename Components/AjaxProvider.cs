@@ -31,7 +31,7 @@ namespace Nevoweb.OS_Chronopost2
             var lang = NBrightBuyUtils.SetContextLangauge(ajaxInfo); // Ajax breaks context with DNN, so reset the context language to match the client.
             var objCtrl = new NBrightBuyController();
 
-            var strOut = "OS_Chronopost Ajax Error";
+            var strOut = "OS_Chronopost2 Ajax Error";
 
             if (PluginUtils.CheckPluginSecurity(PortalSettings.Current.PortalId, "chronopost2"))
             {

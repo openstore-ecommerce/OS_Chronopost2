@@ -58,7 +58,7 @@ namespace Nevoweb.OS_Chronopost2.Components
             else
             {
                 // get soap xml from resx
-                var soapxmlfilename = Utils.MapPath("/DesktopModules/NBright/OS_Chronopost/soapquickcost.xml");
+                var soapxmlfilename = Utils.MapPath("/DesktopModules/NBright/OS_Chronopost2/soapquickcost.xml");
                 var xmlDoc = new XmlDocument();
                 xmlDoc.Load(soapxmlfilename);
                 var soapxml = xmlDoc.OuterXml;
@@ -126,7 +126,7 @@ namespace Nevoweb.OS_Chronopost2.Components
         public List<NBrightInfo> GetRelais()
         {
             // get soap xml from resx
-            var soapxmlfilename = Utils.MapPath("/DesktopModules/NBright/OS_Chronopost/soappointlist.xml");
+            var soapxmlfilename = Utils.MapPath("/DesktopModules/NBright/OS_Chronopost2/soappointlist.xml");
             var xmlDoc = new XmlDocument();
             xmlDoc.Load(soapxmlfilename);
             var soapxml = xmlDoc.OuterXml;
@@ -172,7 +172,7 @@ namespace Nevoweb.OS_Chronopost2.Components
             var rtnUrl = "https://www.chronopost.fr/shipping-cxf/getReservedSkybill?reservationNumber=";
 
             // get soap xml from resx
-            var soapxmlfilename = Utils.MapPath("/DesktopModules/NBright/OS_Chronopost/soaplabel.xml");
+            var soapxmlfilename = Utils.MapPath("/DesktopModules/NBright/OS_Chronopost2/soaplabel.xml");
             var xmlDoc = new XmlDocument();
             xmlDoc.Load(soapxmlfilename);
             var soapxml = xmlDoc.OuterXml;
