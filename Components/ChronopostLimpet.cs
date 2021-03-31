@@ -57,49 +57,54 @@ namespace Nevoweb.OS_Chronopost2.Components
             }
             else
             {
-                // get soap xml from resx
-                var soapxmlfilename = Utils.MapPath("/DesktopModules/NBright/OS_Chronopost2/soapquickcost.xml");
-                var xmlDoc = new XmlDocument();
-                xmlDoc.Load(soapxmlfilename);
-                var soapxml = xmlDoc.OuterXml;
-                // replace the tokens in the soap XML strucutre.
-                soapxml = soapxml.Replace("{accountnumber}", SettingsData.AccountNumber);
-                soapxml = soapxml.Replace("{password}", SettingsData.Password);
-                soapxml = soapxml.Replace("{depcode}", Utils.StripAccents(SettingsData.DistributionPostCode));
-                soapxml = soapxml.Replace("{arrcode}", SettingsData.ArrivalPostCode);
-                soapxml = soapxml.Replace("{weight}", SettingsData.TotalWeight.ToString(CultureInfo.GetCultureInfo("en-US")));
-                soapxml = soapxml.Replace("{productcode}", SelectedProductCode);
-                soapxml = soapxml.Replace("{type}", SettingsData.ProductType);
-
-                if (StoreSettings.Current.DebugMode)
-                {
-                    var nbi2 = new NBrightInfo();
-                    nbi2.XMLData = soapxml;
-                    nbi2.XMLDoc.Save(PortalSettings.Current.HomeDirectoryMapPath + "\\debug_chronopostsoap_" + SelectedProductCode + ".xml");
-                }
-
-                var nbi = GetSoapReturn(soapxml, "https://www.chronopost.fr/quickcost-cxf/QuickcostServiceWS");
-
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(nbi.XMLData);
-                var nsMgr = new XmlNamespaceManager(doc.NameTable);
-                nsMgr.AddNamespace("soap", "http://schemas.xmlsoap.org/soap/envelope/");
-                nsMgr.AddNamespace("ns1", "http://cxf.quickcost.soap.chronopost.fr/");
-                Double shippingcostTCC = 0;
-                Double shippingcostTVA = 0;
+                Double shippingcostTCC = SettingsData.Info.GetXmlPropertyDouble("genxml/textbox/overwritepricettc" + SelectedProductCode.ToLower());
+                Double shippingcostTVA = SettingsData.Info.GetXmlPropertyDouble("genxml/textbox/overwritepricetva" + SelectedProductCode.ToLower());
                 var shippingmsg = "";
 
-                if (StoreSettings.Current.DebugMode)
+                if (shippingcostTCC == 0)
                 {
-                    doc.Save(StoreSettings.Current.FolderTempMapPath + "\\chronopostreturn_" + SelectedProductCode + ".xml");
-                }
+                    // get soap xml from resx
+                    var soapxmlfilename = Utils.MapPath("/DesktopModules/NBright/OS_Chronopost2/soapquickcost.xml");
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.Load(soapxmlfilename);
+                    var soapxml = xmlDoc.OuterXml;
+                    // replace the tokens in the soap XML strucutre.
+                    soapxml = soapxml.Replace("{accountnumber}", SettingsData.AccountNumber);
+                    soapxml = soapxml.Replace("{password}", SettingsData.Password);
+                    soapxml = soapxml.Replace("{depcode}", Utils.StripAccents(SettingsData.DistributionPostCode));
+                    soapxml = soapxml.Replace("{arrcode}", SettingsData.ArrivalPostCode);
+                    soapxml = soapxml.Replace("{weight}", SettingsData.TotalWeight.ToString(CultureInfo.GetCultureInfo("en-US")));
+                    soapxml = soapxml.Replace("{productcode}", SelectedProductCode);
+                    soapxml = soapxml.Replace("{type}", SettingsData.ProductType);
 
-                var shippingnod = doc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:quickCostResponse/return/amountTTC", nsMgr);
-                if (shippingnod != null && Utils.IsNumeric(shippingnod.InnerText)) shippingcostTCC = Convert.ToDouble(shippingnod.InnerText, CultureInfo.GetCultureInfo("en-US"));
-                shippingnod = doc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:quickCostResponse/return/amountTVA", nsMgr);
-                if (shippingnod != null && Utils.IsNumeric(shippingnod.InnerText)) shippingcostTVA = Convert.ToDouble(shippingnod.InnerText, CultureInfo.GetCultureInfo("en-US"));
-                shippingnod = doc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:quickCostResponse/return/errorMessage", nsMgr);
-                if (shippingnod != null) shippingmsg = shippingnod.InnerText;
+                    if (StoreSettings.Current.DebugMode)
+                    {
+                        var nbi2 = new NBrightInfo();
+                        nbi2.XMLData = soapxml;
+                        nbi2.XMLDoc.Save(PortalSettings.Current.HomeDirectoryMapPath + "\\debug_chronopostsoap_" + SelectedProductCode + ".xml");
+                    }
+
+                    var nbi = GetSoapReturn(soapxml, "https://www.chronopost.fr/quickcost-cxf/QuickcostServiceWS");
+
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(nbi.XMLData);
+                    var nsMgr = new XmlNamespaceManager(doc.NameTable);
+                    nsMgr.AddNamespace("soap", "http://schemas.xmlsoap.org/soap/envelope/");
+                    nsMgr.AddNamespace("ns1", "http://cxf.quickcost.soap.chronopost.fr/");
+
+                    if (StoreSettings.Current.DebugMode)
+                    {
+                        doc.Save(StoreSettings.Current.FolderTempMapPath + "\\chronopostreturn_" + SelectedProductCode + ".xml");
+                    }
+
+                    var shippingnod = doc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:quickCostResponse/return/amountTTC", nsMgr);
+                    if (shippingnod != null && Utils.IsNumeric(shippingnod.InnerText)) shippingcostTCC = Convert.ToDouble(shippingnod.InnerText, CultureInfo.GetCultureInfo("en-US"));
+                    shippingnod = doc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:quickCostResponse/return/amountTVA", nsMgr);
+                    if (shippingnod != null && Utils.IsNumeric(shippingnod.InnerText)) shippingcostTVA = Convert.ToDouble(shippingnod.InnerText, CultureInfo.GetCultureInfo("en-US"));
+                    shippingnod = doc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:quickCostResponse/return/errorMessage", nsMgr);
+                    if (shippingnod != null) shippingmsg = shippingnod.InnerText;
+
+                }
 
                 var shippingdealercost = shippingcostTCC;
                 CartInfo.SetXmlPropertyDouble("genxml/shippingcost", shippingcostTCC);
