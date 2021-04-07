@@ -34,6 +34,8 @@ namespace Nevoweb.OS_Chronopost2.Components
             if (ChronofreshOnly)
             {
                 SelectedProductCode = "2R";
+                CartInfo.SetXmlProperty("genxml/pickuppointref", "");
+                CartInfo.SetXmlProperty("genxml/pickuppointaddr", "");
             }
             else
             {
@@ -43,6 +45,11 @@ namespace Nevoweb.OS_Chronopost2.Components
                     {
                         SelectedProductCode = ProductCodeList().First().Key;
                     }
+                }
+                if (SelectedProductCode != "86")  // if not Relais, clear previous value.
+                {
+                    CartInfo.SetXmlProperty("genxml/pickuppointref", "");
+                    CartInfo.SetXmlProperty("genxml/pickuppointaddr", "");
                 }
             }
 
