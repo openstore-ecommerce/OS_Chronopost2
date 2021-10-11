@@ -153,12 +153,6 @@
   <data name="chronopost86.Text" xml:space="preserve">
     <value>Chronopost Relais</value>
   </data>
-  <data name="productcodelist.data" xml:space="preserve">
-    <value>Chronopost 13,Chronopost 24h,Chronopost Relais,Chronopost Express International,Chronopost Classic International,Chronofresh</value>
-  </data>
-  <data name="productcodelist.datavalue" xml:space="preserve">
-    <value>1S,2,86,17,44,2R</value>
-  </data>
   <data name="Description.Text" xml:space="preserve">
     <value>
     &lt;div class="chronopostitem"&gt;&lt;strong&gt;&lt;img src="/DesktopModules/NBright/OS_Chronopost2/Themes/config/img/chrono24.png" /&gt;Chronopost - Livraison express à domicile&lt;/strong&gt;&lt;br /&gt;Colis livré le lendemain matin avant 13h à votre domicile. La veille de la livraison, vous êtes averti par e-mail et SMS.&lt;/div&gt;
@@ -220,5 +214,11 @@ $('input[id*="_cmdOrder_"]').hide();
   </data>
   <data name="chronopostfresh.Text" xml:space="preserve">
     <value>Chronofresh</value>
+  </data>
+  <data name="productcodelist.data" xml:space="preserve">
+    <value>Chronopost 13,Chronopost 10,Chronopost 18, Chronopost Relais, Chronopost Express International,Chronopost Classic International,Chronofresh</value>
+  </data>
+  <data name="productcodelist.datavalue" xml:space="preserve">
+    <value>1,2,16,86,17,44,2R</value>
   </data>
 </root>

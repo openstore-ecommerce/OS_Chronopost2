@@ -154,7 +154,7 @@
     <value>Chronopost Relais</value>
   </data>
   <data name="productcodelist.data" xml:space="preserve">
-    <value>Chronopost 13,Chronopost 24h,Chronopost Relais,Chronopost Express International,Chronopost Classic International,Chronofresh</value>
+    <value>Chronopost 13,Chronopost 10,Chronopost 18, Chronopost Relais, Chronopost Express International,Chronopost Classic International,Chronofresh</value>
   </data>
   <data name="Description.Text" xml:space="preserve">
     <value>
@@ -205,7 +205,7 @@ $('input[id*="_cmdOrder_"]').hide();
 </value>
   </data>
   <data name="productcodelist.datavalue" xml:space="preserve">
-    <value>1S,2,86,17,44,2R</value>
+    <value>1,2,16,86,17,44,2R</value>
   </data>
   <data name="selectrelais.Text" xml:space="preserve">
     <value>Veuillez sélectionner un point relais :</value>
