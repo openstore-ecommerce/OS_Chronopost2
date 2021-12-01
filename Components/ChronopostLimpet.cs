@@ -193,7 +193,8 @@ namespace Nevoweb.OS_Chronopost2.Components
             // replace the tokens in the soap XML strucutre.
             soapxml = soapxml.Replace("{accountNumber}", SettingsData.AccountNumber);
             soapxml = soapxml.Replace("{password}", SettingsData.Password);
-            soapxml = soapxml.Replace("{weight}", SettingsData.TotalWeight.ToString("F"));
+            //soapxml = soapxml.Replace("{weight}", SettingsData.TotalWeight.ToString("F"));
+            soapxml = soapxml.Replace("{weight}", SettingsData.TotalWeight.ToString(CultureInfo.GetCultureInfo("en-US")));            
 
             soapxml = soapxml.Replace("{productcode}", SelectedProductCode);
 

@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
 	<packages>
-		<package name="OS_Chronopost2" type="Module" version="1.0.0">
+		<package name="OS_Chronopost2" type="Module" version="1.0.1">
 			<friendlyName>OS_Chronopost2</friendlyName>
 			<description>OS_Chronopost2: Chronopost Shipping provider for OpenStore</description>
 			<iconFile />
